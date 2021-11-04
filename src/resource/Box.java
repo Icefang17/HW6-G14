@@ -10,6 +10,7 @@ public class Box {
     private Row parentRow;
     private Column parentColumn;
     private Block parentBlock;
+    private ArrayList<Integer> possibilities;
 
     private Box(int rowIndex, int colIndex, int blkIndex, ArrayList<Group> parents){
         this.number = 0;
@@ -19,6 +20,7 @@ public class Box {
         this.parentRow = (Row)parents.get(0);
         this.parentColumn = (Column)parents.get(1);
         this.parentBlock = (Block)parents.get(2);
+        this.possibilities = new ArrayList<>();
     }
 
     public static Box CreateBox(int rowIndex, int colIndex, int blkIndex, Group row, Group column, Group block){
@@ -52,5 +54,7 @@ public class Box {
     public Column getParentColumn(){return parentColumn;}
 
     public Block getParentBlock(){return parentBlock;}
+
+    public ArrayList<Integer> getPossibilities(){return possibilities;}
 
 }

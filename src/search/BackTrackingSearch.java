@@ -1,35 +1,65 @@
 package search;
 
+import java.awt.Point;
+import java.util.ArrayList;
+
 public class BackTrackingSearch {
-    public void BACKTRACKING-SEARCH(CSP csp) { // returns a solution, or failure
-        return BACKTRACK({}, csp);
+    // Assignments have:
+    // A variable to assign
+    // A value to assign the variable to
+    // An array of inferences 
+
+    public State backtrackingSearch(Problem csp) { // returns a solution, or failure
+        
+        return backtrack({}, csp); // Will return an array of assignments.
     }
 
-    public void BACKTRACK(Assignment assignment, CSP csp) { // returns a solution, or failure
-        if(assignment is complete) {
+    public Assignment backtrack(Assignment assignment, Problem csp) { // returns a solution, or failure
+        if(assignment.isComplete())
             return assignment;
-        }
 
-        Variable var = SELECT-UNASSIGNED-VARIABLE(csp); // MRV w/ Degree Heuristic function 
+        // Select box to try.
+        int var = selectUnassignedVariable(csp); // MRV w/ Degree Heuristic function 
 
-        for(Value value : ORDER-DOMAIN-VALUES(var , assignment, csp)) { // Least Constraining Value function
-            if(value is consistent with assignment) {
-                add {var = value} to assignment;
-                inferences = INFERENCE(csp, var , value); // Foward Checking function
+        // Select 
+        for(int value : orderDomainValues(var, assignment, csp)) { // Least Constraining Value function
+            if(assignment.isConsistent(value)) {
+                // add {var = value} to assignment;
+                assignment.add({var = value});
 
-                if(inferences != failure) {
-                    add inferences to assignment;
-                    result = BACKTRACK(assignment, csp); // Recursive call
+                // Forward Check - infer new domain reductions on the neighboring variables
+                inferences = inference(csp, var, value);
 
-                    if(result != failure) {
-                        return result; // Exit case
-                    }
+                if(!inferences.isFailure()) {
+                    assignment.inferences.add(inferences);
+                    Assignment result = backtrack(assignment, csp); // Recursive call
+
+                    if(!result.isFailure())
+                        return result;
                 }
             }
 
-            remove {var = value} and inferences from assignment;
+            assignment.remove({var = value});
+            assignment.inferences.remove(inferences);
         }
 
-        return failure;
+        return null;
+    }
+
+    private int selectUnassigedVariable(Problem csp) {
+        // Select the variable from the problem with the fewest possible values
+        // Breaks ties by favoring the variable with the most cumulative open spaces in its row, col, and block.
+    }
+
+    private int orderDomainValues(int var, Assignment assignment, Problem csp) {
+        // Orders the domain values for the current variable by least constrained value.
+        // Basically computes the domain from all 3 directions and orders it by ???.
+    }
+
+    private domain? inference(Problem csp, int var, int value) {
+        // Establishes arc consistency for the current variable.
+        
+        // Remove value from surrounding domains. If any domains are empty, return null
+        // get boxes from csp at [var], remove value from row, col, block domain.
     }
 }

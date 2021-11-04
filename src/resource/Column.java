@@ -14,8 +14,8 @@ public class Column extends Group{
         |7|
         |8|
      */
-    public Column(int index){
-        super(index, Constraint.COLUMN);
+    public Column(){
+        super(Constraint.COLUMN);
 
     }
 }

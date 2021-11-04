@@ -8,8 +8,8 @@ public class Block extends Group{
         |3|4|5|
         |6|7|8|
      */
-    public Block(int index){
-        super(index, Constraint.BLOCK);
+    public Block(){
+        super(Constraint.BLOCK);
 
     }
 }

@@ -55,7 +55,7 @@ public class BackTrackingSearch {
 
         foreach(Box var : csp.variables) {
             ArrayList<Box> row = Box.getParentRow().getChildren();
-            for(int i = 0; i < row.length) {
+            for(int i = 0; i < row.size()) {
                 if(!domain.contains(row.get(i).getNumber()))
                     domain.add(row.get(i).getNumber());
             }

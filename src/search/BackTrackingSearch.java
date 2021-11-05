@@ -4,6 +4,7 @@ import java.awt.Point;
 import java.util.ArrayList;
 
 import resource.*;
+import map.*;
 
 // What is assignment? inference? /
 // Should the map be a 2d array? Groups of constraints? /
@@ -24,24 +25,26 @@ public class BackTrackingSearch {
         int var = selectUnassignedVariable(csp); // MRV w/ Degree Heuristic function 
 
         for(int i = 1; i <= 9; i++) {
-            if(assignment.isConsistent(value)) { // 
+            if(assignment.isConsistent(i)) { // 
                 // add {var = value} to assignment;
-                assignment.add({var = value});
+                assignment.setBox(var, i);
 
                 // Forward Check - infer new domain reductions on the neighboring variables
-                inferences = inference(csp, var, value);
+                ArrayList<ArrayList<Integer>> inferences = new ArrayList<>();
+                inferences = inference(csp, var, i);
 
                 if(!inferences.isFailure()) {
                     assignment.inferences.add(inferences);
-                    State result = backtrack(assignment, csp); // Recursive call
+                    State result = new State(backtrack(assignment, csp)); // Recursive call
 
                     if(!result.isFailure())
                         return result;
                 }
             }
 
-            assignment.remove({var = value});
-            assignment.inferences.remove(inferences);
+            assignment.resetBox(var);
+            // assignment.remove({var = value});
+            // assignment.inferences.remove(inferences);
         }
 
         return null;
@@ -49,12 +52,14 @@ public class BackTrackingSearch {
 
     // Will select the variable with the smallest domain.
     // If there is a tie, will choose the variable with the most empty boxes in its parent sets.
-    private Box selectUnassigedVariable(Problem csp) {
+    private Box selectUnassigedVariable(State csp) {
         // Select the variable from the problem with the fewest possible values ie smallest domain
         // Breaks ties by favoring the variable with the most cumulative open spaces in its row, col, and block.
         ArrayList<Integer> domain = new ArrayList<>();
 
         foreach(Box var : csp.variables) {
+            ArrayList<Integer> prevDomain = new ArrayList<>(domain);
+
             ArrayList<Box> row = Box.getParentRow().getChildren();
             for(int i = 0; i < row.size()) {
                 if(!domain.contains(row.get(i).getNumber()))
@@ -72,18 +77,15 @@ public class BackTrackingSearch {
                 if(!domain.contains(row.get(i).getNumber()))
                     domain.add(row.get(i).getNumber());
             }
+
+            if(prevDomain.size() < domain.size())
+                domain = prevDomain;
+
+            
         }
     }
 
-    // Order the domain by least constrained value.
-    // This is arbitrary, domain values all share the same constraints.
-    private int orderDomainValues(Box var, ArrayList<Pair> assignment, Problem csp) {
-        return csp.domain;
-        // Orders the domain values for the current variable by least constrained value.
-        // Basically computes the domain from all 3 directions and orders it by ???.
-    }
-
-    private domain? inference(Problem csp, Box var, int value) {
+    private ArrayList<ArrayList<Integer>> inference(State csp, Box var, int value) {
         // Establishes arc consistency for the current variable.
         
         // Remove value from surrounding domains. If any domains are empty, return null

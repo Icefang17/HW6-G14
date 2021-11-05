@@ -5,17 +5,18 @@ import java.util.ArrayList;
 
 import resource.*;
 
-// What is assignment? inference?
-// Should the map be a 2d array? Groups of constraints?
-// Is the CSP just the start state here?
-// Order Domain values doesn't actually matter here does it?
+// What is assignment? inference? /
+// Should the map be a 2d array? Groups of constraints? /
+// Is the CSP just the start state here? /
+// Order Domain values doesn't actually matter here does it? /
 
 public class BackTrackingSearch {
-    public ArrayList<Pair> backtrackingSearch(Problem csp) { // returns a solution, or failure
-        return backtrack({}, csp); // Will return an array of assignments?
+    public State backtrackingSearch(State csp) { // returns a solution, or failure
+        State assignment = new State(csp);
+        return backtrack(assignment, csp);
     }
 
-    public ArrayList<Pair> backtrack(ArrayList<Pair> assignment, Problem csp) { // returns a solution, or failure
+    public State backtrack(State assignment, State csp) { // returns a solution, or failure
         if(assignment.isComplete())
             return assignment;
 
@@ -32,7 +33,7 @@ public class BackTrackingSearch {
 
                 if(!inferences.isFailure()) {
                     assignment.inferences.add(inferences);
-                    Assignment result = backtrack(assignment, csp); // Recursive call
+                    State result = backtrack(assignment, csp); // Recursive call
 
                     if(!result.isFailure())
                         return result;

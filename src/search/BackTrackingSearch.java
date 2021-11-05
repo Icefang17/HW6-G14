@@ -6,11 +6,6 @@ import java.util.ArrayList;
 import resource.*;
 import map.*;
 
-// What is assignment? inference? /
-// Should the map be a 2d array? Groups of constraints? /
-// Is the CSP just the start state here? /
-// Order Domain values doesn't actually matter here does it? /
-
 public class BackTrackingSearch {
     public State backtrackingSearch(State csp) { // returns a solution, or failure
         State assignment = new State(csp);
@@ -27,7 +22,8 @@ public class BackTrackingSearch {
         for(int i = 1; i <= 9; i++) {
             if(assignment.isConsistent(i)) { // 
                 // add {var = value} to assignment;
-                assignment.setBox(var, i);
+                assignment.setValue(var, i);
+                var.setNumber(i);
 
                 // Forward Check - infer new domain reductions on the neighboring variables
                 ArrayList<ArrayList<Integer>> inferences = new ArrayList<>();

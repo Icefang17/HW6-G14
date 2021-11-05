@@ -22,8 +22,8 @@ public class BackTrackingSearch {
         // Select the box with the fewest possible values, or with the most available group spaces on tie break.
         int var = selectUnassignedVariable(csp); // MRV w/ Degree Heuristic function 
 
-        for(int value : orderDomainValues(var, assignment, csp)) { // Least Constraining Value function
-            if(assignment.isConsistent(value)) {
+        for(int i = 1; i <= 9; i++) {
+            if(assignment.isConsistent(value)) { // 
                 // add {var = value} to assignment;
                 assignment.add({var = value});
 

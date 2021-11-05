@@ -1,34 +1,19 @@
+import map.State;
 import resource.*;
 
+import java.awt.*;
 import java.util.ArrayList;
 
 public class Initialize {
 
-    public static void main(String[] args){
-        ArrayList<Group> rows = new ArrayList<>();
-        ArrayList<Group> cols = new ArrayList<>();
-        ArrayList<Group> blks = new ArrayList<>();
-        for(int i = 0; i < 9; i++){
-            rows.add(new Row());
-            cols.add(new Column());
-            blks.add(new Block());
-        }
+    public static final int set1[][] = {{2,0,1},{5,0,2},{2,1,5},{5,1,6},{7,1,3},{0,2,4},{1,2,6},
+                                        {5,2,5},{3,3,1},{5,3,4},{0,4,6},{3,4,8},{6,4,1},{7,4,4},
+                                        {8,4,3},{}};
 
-        for(int y = 0; y < 9; y++){
-            int startBlock = 0;
-            if(y >= 3)
-                startBlock = 3;
-            if(y >= 6)
-                startBlock = 6;
-            for(int x = 0; x < 9; x++){
-                if(x % 3 == 0 && x > 0)
-                    startBlock++;
-                Box box = Box.CreateBox(y, x, startBlock, rows.get(y), cols.get(x), blks.get(startBlock));
-                box.getParentRow().addChild(box);
-                box.getParentColumn().addChild(box);
-                box.getParentBlock().addChild(box);
-            }
-        }
+    public static void main(String[] args){
+
+        State state = new State();
+
     }
 
 }

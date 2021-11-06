@@ -9,23 +9,33 @@ import java.util.ArrayList;
 
 public class BTS {
 
-    public ArrayList<Pair> backtrackingSearch(State csp){
+    public static ArrayList<Pair> backtrackingSearch(State csp){
         return backtrack(new ArrayList<>(), csp);
     }
 
-    private ArrayList<Pair> backtrack(ArrayList<Pair> assignment, State csp){
+    private static ArrayList<Pair> backtrack(ArrayList<Pair> assignment, State csp){
         if(csp.isComplete()){
             return assignment;
         }
         Point var = selectUnassignedVariable(csp);
         ArrayList<Integer> domain = csp.getBox(var.x, var.y).getDomain();
         for(int i = 0; i < domain.size(); i++){
-            csp.getBox(var).setNumber(domain.get(i));
-            if()
+            Integer number = domain.get(i);
+            csp.getBox(var).setNumber(number);
+            ArrayList<Box> rowList = csp.getBox(var).getParentRow().restrictDomains(number);
+            ArrayList<Box> colList = csp.getBox(var).getParentColumn().restrictDomains(number);
+            ArrayList<Box> blkList = csp.getBox(var).getParentBlock().restrictDomains(number);
+            ArrayList<Pair> inferences = new ArrayList<>();
+            if(csp.getBox(var).checkValidity()){
+                Pair varValue = new Pair(var, number);
+                assignment.add(varValue);
+
+            }
         }
+        return null;
     }
 
-    private Point selectUnassignedVariable(State state){
+    private static Point selectUnassignedVariable(State state){
         ArrayList<Point> selections = new ArrayList<>();
         int minDomainSize = 100;
         for(int i = 0; i < 9; i++){
@@ -47,7 +57,7 @@ public class BTS {
         return tieBreaker(selections, state);
     }
 
-    private Point tieBreaker(ArrayList<Point> selections, State state){
+    private static Point tieBreaker(ArrayList<Point> selections, State state){
         Point choice = new Point();
         Point point;
         Box box;
@@ -63,6 +73,14 @@ public class BTS {
             }
         }
         return choice;
+    }
+
+    private static ArrayList<Pair> inference(State csp, Point var, Integer value){
+        ArrayList<Pair> steps = new ArrayList<>();
+        boolean violation = false;
+        while(violation == false){
+
+        }
     }
 
 }

@@ -12,6 +12,12 @@ public class Box {
     private Block parentBlock;
     private ArrayList<Integer> domain;
 
+    /*
+        Domain: {1,3,5,6,7}     contains values between 1 and 9 and will be single
+                                valued upon set (i.e; fill 1 -> {1}) the domain will
+                                be EMPTY if a constraint is violated
+     */
+
     private Box(int rowIndex, int colIndex, int blkIndex, ArrayList<Group> parents){
         this.number = 0;
         this.rowIndex = rowIndex;
@@ -21,6 +27,7 @@ public class Box {
         this.parentColumn = (Column)parents.get(1);
         this.parentBlock = (Block)parents.get(2);
         this.domain = new ArrayList<>();
+        initializeDomain();
     }
 
     public static Box CreateBox(int rowIndex, int colIndex, int blkIndex, Group row, Group column, Group block){
@@ -39,6 +46,17 @@ public class Box {
         return null;
     }
 
+    public void initializeDomain(){
+        for(int i = 1; i < 10; i++){
+            domain.add(i);
+        }
+    }
+
+    public boolean checkValidity(){
+        if(parentRow.isComplete() == (-2) || parentColumn.isComplete() == (-2) || parentBlock.isComplete() == (-2))
+            return false;
+        return true;
+    }
     public void setNumber(int number){this.number = number;}
 
     public int getNumber(){return number;}

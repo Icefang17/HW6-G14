@@ -85,16 +85,9 @@ public class BTS {
     private static ArrayList<Pair> inference(State csp, Point var, Integer value) {
         ArrayList<Pair> steps = new ArrayList<>();
         Box box = csp.getBox(var);
+        Integer boxValue = value;
         boolean end = false;
-        while (end == false) {
-            Box newBox = findNearestLowestDomain(csp, box);
-            if(newBox == box){
-                selectUnassignedVariable(csp);
-            }
-            else
-                box = newBox;
-
-            Integer boxValue = box.getDomain().get(0);
+        while(end == false) {
             box.domainInference(boxValue);
             box.getParentRow().restrictDomains(boxValue);
             box.getParentColumn().restrictDomains(boxValue);
@@ -102,8 +95,16 @@ public class BTS {
             if(!box.checkValidity()) {
                 return null;
             }
-            steps.add(new Pair(new Point(box.getRowIndex(), box.getColIndex()), boxValue));
 
+            Box newBox = findNearestLowestDomain(csp, box);
+            if(newBox == box){
+                return steps;
+            }
+            else
+                box = newBox;
+
+            boxValue = box.getDomain().get(0);
+            steps.add(new Pair(new Point(box.getRowIndex(), box.getColIndex()), boxValue));
         }
         return steps;
     }

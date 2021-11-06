@@ -10,7 +10,6 @@ public class State {
     public ArrayList<Group> cols;
     public ArrayList<Group> blks;
 
-    private State safeState;
 
     public State(){
         this.rows = new ArrayList<>();
@@ -41,13 +40,6 @@ public class State {
                 box.getParentBlock().addChild(box);
             }
         }
-    }
-
-    public boolean setSafeState(){
-        if(safeState != null)
-            return false;
-        this.safeState = this;
-        return true;
     }
 
     public int setBoxNumber(Point location, int number){

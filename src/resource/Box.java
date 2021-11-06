@@ -57,6 +57,12 @@ public class Box {
         domain.add(value);
     }
 
+    public void restrictNeighboringDomains(Integer value){
+        parentRow.restrictDomains(value);
+        parentColumn.restrictDomains(value);
+        parentBlock.restrictDomains(value);
+    }
+
     public boolean checkValidity(){
         if(parentRow.isComplete() == (-2) || parentColumn.isComplete() == (-2) || parentBlock.isComplete() == (-2))
             return false;

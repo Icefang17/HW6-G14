@@ -12,7 +12,6 @@ public class Initialize {
         State state = new State();
         state.printBoard();
         fillBoard(set1, state);
-        state.setSafeState();
         state.printBoard();
     }
 

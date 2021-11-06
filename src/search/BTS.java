@@ -1,42 +1,44 @@
 package search;
 
 import map.State;
-import resource.Block;
-import resource.Box;
-import resource.Column;
-import resource.Pair;
-import resource.Row;
+import resource.*;
 
 import java.awt.Point;
 import java.util.ArrayList;
 
 public class BTS {
-
-    public static ArrayList<Pair> backtrackingSearch(State csp){
+    public static ArrayList<Pair> backtrackingSearch(State csp) {
         return backtrack(new ArrayList<>(), csp);
     }
 
-    private static ArrayList<Pair> backtrack(ArrayList<Pair> assignment, State csp){
-        if(csp.isComplete()){
+    private static ArrayList<Pair> backtrack(ArrayList<Pair> assignment, State csp) {
+        if(csp.isComplete())
             return assignment;
-        }
+
         Point var = selectUnassignedVariable(csp);
+
         ArrayList<Integer> domain = csp.getBox(var.x, var.y).getDomain();
-        for(int i = 0; i < domain.size(); i++){
-            Integer number = domain.get(i);
-            csp.getBox(var).setNumber(number);
-            ArrayList<Box> rowList = csp.getBox(var).getParentRow().restrictDomains(number);
-            ArrayList<Box> colList = csp.getBox(var).getParentColumn().restrictDomains(number);
-            ArrayList<Box> blkList = csp.getBox(var).getParentBlock().restrictDomains(number);
+        for(int i = 0; i < domain.size(); i++) {
+            Pair newAssignment = new Pair(var, i);
             ArrayList<Pair> inferences = new ArrayList<>();
-            if(csp.getBox(var).checkValidity()){
-                Pair varValue = new Pair(var, number);
-                assignment.add(varValue);
 
+            if(csp.getBox(var).checkValidity()) {
+                assignment.add(new Pair(var, i));
+
+                inferences.addAll(inference(csp, var, i));
+
+                if(inferences != null) {
+                    assignment.addAll(inferences);
+                    ArrayList<Pair> result = backtrack(assignment, csp);
+                    
+                    if(result != null)
+                        return result;
+                }
             }
-
-            //ArrayList<Pair> inferences = new ArrayList<>(inference(csp, var, i));
+            assignment.remove(newAssignment);
+            assignment.removeAll(inferences);
         }
+
         return null;
     }
 
@@ -101,6 +103,7 @@ public class BTS {
                 return null;
             }
             steps.add(new Pair(new Point(box.getRowIndex(), box.getColIndex()), boxValue));
+
         }
         return steps;
     }

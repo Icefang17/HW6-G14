@@ -1,17 +1,22 @@
 package search;
 
 import map.State;
-import resource.*;
+import resource.Block;
+import resource.Box;
+import resource.Column;
+import resource.Pair;
+import resource.Row;
 
 import java.awt.Point;
 import java.util.ArrayList;
 
 public class BTS {
-    public static ArrayList<Pair> backtrackingSearch(State csp) {
+
+    public static ArrayList<Pair> backtrackingSearch(State csp){
         return backtrack(new ArrayList<>(), csp);
     }
 
-    private static ArrayList<Pair> backtrack(ArrayList<Pair> assignment, State csp) {
+    private static ArrayList<Pair> backtrack(ArrayList<Pair> assignment, State csp){
         if(csp.isComplete())
             return assignment;
 
@@ -41,6 +46,24 @@ public class BTS {
 
         return null;
     }
+
+// =======
+//         for(int i = 0; i < domain.size(); i++){
+//             Integer number = domain.get(i);
+//             csp.getBox(var).setNumber(number);
+//             ArrayList<Box> rowList = csp.getBox(var).getParentRow().restrictDomains(number);
+//             ArrayList<Box> colList = csp.getBox(var).getParentColumn().restrictDomains(number);
+//             ArrayList<Box> blkList = csp.getBox(var).getParentBlock().restrictDomains(number);
+//             ArrayList<Pair> inferences = new ArrayList<>();
+//             if(csp.getBox(var).checkValidity()){
+//                 Pair varValue = new Pair(var, number);
+//                 assignment.add(varValue);
+
+//             }
+
+//             //ArrayList<Pair> inferences = new ArrayList<>(inference(csp, var, i));
+//         }
+// >>>>>>> 74452434e9f88abd2944106acb63298d4125ce36
 
     private static Point selectUnassignedVariable(State state){
         ArrayList<Point> selections = new ArrayList<>();

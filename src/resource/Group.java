@@ -62,5 +62,7 @@ public class Group {
 
     public ArrayList<Box> getChildren(){return children;}
 
+    public Box getChild(int index){return children.get(index);}
+
     public Constraint getType(){return type;}
 }

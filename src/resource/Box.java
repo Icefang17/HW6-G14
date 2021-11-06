@@ -52,6 +52,11 @@ public class Box {
         }
     }
 
+    public void domainInference(Integer value){
+        domain.clear();
+        domain.add(value);
+    }
+
     public boolean checkValidity(){
         if(parentRow.isComplete() == (-2) || parentColumn.isComplete() == (-2) || parentBlock.isComplete() == (-2))
             return false;

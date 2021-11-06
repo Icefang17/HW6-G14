@@ -84,14 +84,15 @@ public class State {
             for(int j = 0; j < 9; j++){
                 if(j % 3 == 0 && j > 0)
                     row = row.concat("|  ");
+
                 row = row.concat("|" + getBox(j, i).getNumber());
             }
+
             row = row.concat("|");
             if(i % 3 == 0 && i > 0)
                 System.out.println("");
-            System.out.println(row);
 
+            System.out.println(row);
         }
     }
-
 }

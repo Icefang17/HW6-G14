@@ -1,11 +1,7 @@
 package search;
 
 import map.State;
-import resource.Block;
-import resource.Box;
-import resource.Column;
-import resource.Pair;
-import resource.Row;
+import resource.*;
 
 import java.awt.Point;
 import java.util.ArrayList;

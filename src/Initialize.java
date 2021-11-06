@@ -1,4 +1,8 @@
+import java.util.ArrayList;
+
 import map.State;
+import resource.Pair;
+import search.BTS;
 
 public class Initialize {
 
@@ -8,11 +12,14 @@ public class Initialize {
                                         {7,6,5},{0,7,1},{3,7,3},{4,7,2},{2,8,9},{6,8,3}};
 
     public static void main(String[] args){
-
         State state = new State();
         state.printBoard();
         fillBoard(set1, state);
         state.printBoard();
+
+        ArrayList<Pair> assignment = new ArrayList<>(BTS.backtrackingSearch(state));
+
+        System.out.println(assignment);
     }
 
     public static void fillBoard(int set[][], State state){

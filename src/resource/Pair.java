@@ -4,13 +4,13 @@ import java.awt.Point;
 
 public class Pair {
     private Point var;
-    private int value;
+    private Integer value;
 
-    public Pair(Point location, int value){
+    public Pair(Point location, Integer value){
         this.value = value;
         this.var = location;
     }
-    public Pair(int x, int y, int value){
+    public Pair(int x, int y, Integer value){
         this.value = value;
         this.var.setLocation(x, y);
     }

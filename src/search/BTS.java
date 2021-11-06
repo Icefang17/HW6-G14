@@ -1,22 +1,17 @@
 package search;
 
 import map.State;
-import resource.Block;
-import resource.Box;
-import resource.Column;
-import resource.Pair;
-import resource.Row;
+import resource.*;
 
 import java.awt.Point;
 import java.util.ArrayList;
 
 public class BTS {
-
-    public ArrayList<Pair> backtrackingSearch(State csp){
+    public static ArrayList<Pair> backtrackingSearch(State csp) {
         return backtrack(new ArrayList<>(), csp);
     }
 
-    private ArrayList<Pair> backtrack(ArrayList<Pair> assignment, State csp){
+    private static ArrayList<Pair> backtrack(ArrayList<Pair> assignment, State csp) {
         if(csp.isComplete())
             return assignment;
 
@@ -27,7 +22,7 @@ public class BTS {
             Pair newAssignment = new Pair(var, i);
             ArrayList<Pair> inferences = new ArrayList<>();
 
-            if(isConsistent(i, assignment, csp)) {
+            if(csp.getBox(var).checkValidity()) {
                 assignment.add(new Pair(var, i));
 
                 inferences.addAll(inference(csp, var, i));
@@ -47,7 +42,7 @@ public class BTS {
         return null;
     }
 
-    private Point selectUnassignedVariable(State state){
+    private static Point selectUnassignedVariable(State state){
         ArrayList<Point> selections = new ArrayList<>();
         int minDomainSize = 100;
         for(int i = 0; i < 9; i++){
@@ -69,7 +64,7 @@ public class BTS {
         return tieBreaker(selections, state);
     }
 
-    private Point tieBreaker(ArrayList<Point> selections, State state){
+    private static Point tieBreaker(ArrayList<Point> selections, State state){
         Point choice = new Point();
         Point point;
         Box box;
@@ -87,13 +82,52 @@ public class BTS {
         return choice;
     }
 
-    private boolean isConsistent(int value, ArrayList<Pair> assignment, State csp) {
-        
-        
-        return true;
+    private static ArrayList<Pair> inference(State csp, Point var, Integer value) {
+        ArrayList<Pair> steps = new ArrayList<>();
+        Box box = csp.getBox(var);
+        boolean violation = false;
+        while (!violation) {
+            box = findNearestLowestDomain(csp, box);
+            Integer boxValue = box.getDomain().get(0);
+            box.domainInference(boxValue);
+            box.getParentRow().restrictDomains(boxValue);
+            box.getParentColumn().restrictDomains(boxValue);
+            box.getParentBlock().restrictDomains(boxValue);
+            if(!box.checkValidity()) {
+                violation = true;
+                break;
+            }
+        }
     }
 
-    private ArrayList<Pair> inference(State csp, Point var, int value) {
+    private static Box findNearestLowestDomain(State csp, Box box){
+        int lowestDomain = 100;
+        Box returnBox = box;
+        for(int i = 0; i < 9; i++){
+            Box curRowChild = box.getParentRow().getChild(i);
+            Box curColChild = box.getParentColumn().getChild(i);
+            Box curBlkChild = box.getParentBlock().getChild(i);
+            if(curRowChild.getDomain().size() < lowestDomain && curRowChild.getNumber() == 0){
+                lowestDomain = curRowChild.getDomain().size();
+                returnBox = curRowChild;
+            }
+            if(curColChild.getDomain().size() < lowestDomain && curColChild.getNumber() == 0){
+                lowestDomain = curColChild.getDomain().size();
+                returnBox = curColChild;
+            }
+            if(curBlkChild.getDomain().size() < lowestDomain && curBlkChild.getNumber() == 0){
+                lowestDomain = curBlkChild.getDomain().size();
+                returnBox = curBlkChild;
+            }
+        }
+        if(lowestDomain > 9) {
+            System.out.println("ERROR: Something went wrong in findNearestLowestDomain()");
+
+        }
+        return returnBox;
+    }
+
+    /*private ArrayList<Pair> inference(State csp, Point var, int value) {
         ArrayList<Pair> assignments = new ArrayList<>();
         
         Box box = csp.getBox(var);
@@ -160,6 +194,6 @@ public class BTS {
                 assignments.add(newPair);
             }
         }
-    }
+    }*/
 
 }

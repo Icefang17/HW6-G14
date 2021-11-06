@@ -1,3 +1,4 @@
+/*
 package search;
 
 import java.awt.Point;
@@ -94,4 +95,4 @@ for(int i = 0; i < 9; i++) {
         return false;
     if !cols.get(i).isComplete  
         return false;
-}
+}*/

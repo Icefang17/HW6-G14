@@ -6,15 +6,16 @@ import java.awt.*;
 import java.util.ArrayList;
 
 public class State {
-    private static final int POSSIBLE_VALUES[] = {1,2,3,4,5,6,7,8,9};
     public ArrayList<Group> rows;
     public ArrayList<Group> cols;
     public ArrayList<Group> blks;
 
+    private State safeState;
+
     public State(){
-        rows = new ArrayList<>();
-        cols = new ArrayList<>();
-        blks = new ArrayList<>();
+        this.rows = new ArrayList<>();
+        this.cols = new ArrayList<>();
+        this.blks = new ArrayList<>();
         instantiateBoard();
     }
 
@@ -40,6 +41,13 @@ public class State {
                 box.getParentBlock().addChild(box);
             }
         }
+    }
+
+    public boolean setSafeState(){
+        if(safeState != null)
+            return false;
+        this.safeState = this;
+        return true;
     }
 
     public int setBoxNumber(Point location, int number){
@@ -70,8 +78,21 @@ public class State {
         return true;
     }
 
-    public boolean checkConstraints(Box box){
+    public void printBoard(){
+        for(int i = 0; i < 9; i++){
+            String row = new String();
+            for(int j = 0; j < 9; j++){
+                if(j % 3 == 0 && j > 0)
+                    row = row.concat("|  ");
 
+                row = row.concat("|" + getBox(j, i).getNumber());
+            }
+
+            row = row.concat("|");
+            if(i % 3 == 0 && i > 0)
+                System.out.println("");
+
+            System.out.println(row);
+        }
     }
-
 }

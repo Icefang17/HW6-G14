@@ -37,13 +37,15 @@ public class Group {
         for(int i = 0; i < MAX; i++){
             if(children.get(i).getNumber() == 0)
                 count++;
+            if(children.get(i).getDomain().isEmpty())
+                return (-2);
         }
         return count;
     }
 
     public ArrayList<Box> restrictDomains(Integer number){
         ArrayList<Box> boxes = new ArrayList<>();
-        for(int i = 0; i < children.size(); i++){
+        for(int i = 0; i < 9; i++){
             if(!children.get(i).getDomain().isEmpty() && children.get(i).getDomain().contains(number)){
                 children.get(i).getDomain().remove(number);
                 boxes.add(children.get(i));

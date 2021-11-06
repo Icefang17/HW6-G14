@@ -30,7 +30,7 @@ public class BTS {
             if(csp.getBox(var).checkValidity()) {
                 assignment.add(new Pair(var, i));
 
-                inferences.addAll(inference(csp, var, i));
+                inferences.addAll(inference(csp, var, i, new ArrayList<Pair>()));
 
                 if(inferences != null) {
                     assignment.addAll(inferences);
@@ -105,31 +105,31 @@ public class BTS {
         return choice;
     }
 
-    private static ArrayList<Pair> inference(State csp, Point var, Integer value) {
-        ArrayList<Pair> steps = new ArrayList<>();
+    private static ArrayList<Pair> inference(State csp, Point var, Integer value, ArrayList<Pair> steps) {
+        //ArrayList<Pair> steps = new ArrayList<>();
         Box box = csp.getBox(var);
         Integer boxValue = value;
-        boolean end = false;
-        while(end == false) {
-            box.domainInference(boxValue);
-            box.getParentRow().restrictDomains(boxValue);
-            box.getParentColumn().restrictDomains(boxValue);
-            box.getParentBlock().restrictDomains(boxValue);
-            if(!box.checkValidity()) {
-                return null;
-            }
 
-            Box newBox = findNearestLowestDomain(csp, box);
-            if(newBox == box){
-                return steps;
-            }
-            else
-                box = newBox;
-
-            boxValue = box.getDomain().get(0);
-            steps.add(new Pair(new Point(box.getRowIndex(), box.getColIndex()), boxValue));
+        box.domainInference(boxValue);
+        box.getParentRow().restrictDomains(boxValue);
+        box.getParentColumn().restrictDomains(boxValue);
+        box.getParentBlock().restrictDomains(boxValue);
+        if(!box.checkValidity()) {
+            return null;
         }
-        return steps;
+
+        Box newBox = findNearestLowestDomain(csp, box);
+        if(newBox == box){
+            return steps;
+        }
+        else
+            box = newBox;
+
+        boxValue = box.getDomain().get(0);
+        Point boxVar = new Point(box.getRowIndex(), box.getColIndex());
+        steps.add(new Pair(boxVar, boxValue));
+
+        return inference(csp, boxVar, boxValue, steps);
     }
 
     private static Box findNearestLowestDomain(State csp, Box box){

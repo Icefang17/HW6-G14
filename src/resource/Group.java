@@ -27,7 +27,7 @@ public class Group {
     }
 
     // Checks how many children are still empty
-    // returns number of unset children or -1 on failure
+    // returns number of unset children or -1 on failure or -2 on finding an invalid domain
     public int isComplete(){
         if(children.size() != MAX){
             System.out.println("ERROR: Group does not have 9 children.");
@@ -39,6 +39,23 @@ public class Group {
                 count++;
         }
         return count;
+    }
+
+    public ArrayList<Box> restrictDomains(Integer number){
+        ArrayList<Box> boxes = new ArrayList<>();
+        for(int i = 0; i < children.size(); i++){
+            if(!children.get(i).getDomain().isEmpty() && children.get(i).getDomain().contains(number)){
+                children.get(i).getDomain().remove(number);
+                boxes.add(children.get(i));
+            }
+        }
+        return boxes;
+    }
+
+    public void unrestrictDomains(Integer number, ArrayList<Box> boxes){
+        for(int i = 0; i < boxes.size(); i++){
+            boxes.get(i).getDomain().add(number);
+        }
     }
 
     public ArrayList<Box> getChildren(){return children;}

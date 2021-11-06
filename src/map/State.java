@@ -52,4 +52,26 @@ public class State {
         }
         return 0;
     }
+
+    public Box getBox(int x, int y){
+        return rows.get(y).getChildren().get(x);
+    }
+    public Box getBox(Point location){
+        return rows.get(location.y).getChildren().get(location.x);
+    }
+
+    // Checks all groups for completeness
+    // If a group is not complete, return false
+    public boolean isComplete(){
+        for(int i = 0; i < 9 ; i++){
+            if(rows.get(i).isComplete() > 0 || cols.get(i).isComplete() > 0 || blks.get(i).isComplete() > 0)
+                return false;
+        }
+        return true;
+    }
+
+    public boolean checkConstraints(Box box){
+
+    }
+
 }

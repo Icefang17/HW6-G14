@@ -17,17 +17,34 @@ public class BTS {
     }
 
     private ArrayList<Pair> backtrack(ArrayList<Pair> assignment, State csp){
-        if(csp.isComplete()){
+        if(csp.isComplete())
             return assignment;
-        }
-        Point var = selectUnassignedVariable(csp);
-        ArrayList<Integer> domain = csp.getBox(var.x, var.y).getDomain();
-        for(int i = 0; i < domain.size(); i++){
-            csp.getBox(var).setNumber(domain.get(i));
-            if()
 
-            ArrayList<Pair> inferences = new ArrayList<>(inference(csp, var, i));
+        Point var = selectUnassignedVariable(csp);
+
+        ArrayList<Integer> domain = csp.getBox(var.x, var.y).getDomain();
+        for(int i = 0; i < domain.size(); i++) {
+            Pair newAssignment = new Pair(var, i);
+            ArrayList<Pair> inferences = new ArrayList<>();
+
+            if(isConsistent(i, assignment, csp)) {
+                assignment.add(new Pair(var, i));
+
+                inferences.addAll(inference(csp, var, i));
+
+                if(inferences != null) {
+                    assignment.addAll(inferences);
+                    ArrayList<Pair> result = backtrack(assignment, csp);
+                    
+                    if(result != null)
+                        return result;
+                }
+            }
+            assignment.remove(newAssignment);
+            assignment.removeAll(inferences);
         }
+
+        return null;
     }
 
     private Point selectUnassignedVariable(State state){
@@ -68,6 +85,12 @@ public class BTS {
             }
         }
         return choice;
+    }
+
+    private boolean isConsistent(int value, ArrayList<Pair> assignment, State csp) {
+        
+        
+        return true;
     }
 
     private ArrayList<Pair> inference(State csp, Point var, int value) {

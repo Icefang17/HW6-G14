@@ -1,8 +1,11 @@
 package search;
 
 import map.State;
+import resource.Block;
 import resource.Box;
+import resource.Column;
 import resource.Pair;
+import resource.Row;
 
 import java.awt.Point;
 import java.util.ArrayList;
@@ -22,6 +25,8 @@ public class BTS {
         for(int i = 0; i < domain.size(); i++){
             csp.getBox(var).setNumber(domain.get(i));
             if()
+
+            ArrayList<Pair> inferences = new ArrayList<>(inference(csp, var, i));
         }
     }
 
@@ -63,6 +68,75 @@ public class BTS {
             }
         }
         return choice;
+    }
+
+    private ArrayList<Pair> inference(State csp, Point var, int value) {
+        ArrayList<Pair> assignments = new ArrayList<>();
+        
+        Box box = csp.getBox(var);
+        Block blk = box.getParentBlock();
+        Column col = box.getParentColumn();
+        Row row = box.getParentRow();
+
+        row.restrictDomains(value);
+        col.restrictDomains(value);
+        blk.restrictDomains(value);
+
+        for(int i = 0; i < row.getChildren().size(); i++) {
+            if(row.getChild(i).getDomain().size() == 1 && row.getChild(i).getNumber() == 0) {
+                int x = row.getChild(i).getRowIndex();
+                int y = row.getChild(i).getColIndex();
+                Point newVar = new Point(x, y);
+                int newValue = row.getChild(i).getDomain().get(0);
+                Pair newPair = new Pair(newVar, newValue);
+
+                for(int j = 0; j < row.getChildren().size(); j++) {
+                    if(row.getChild(j).getNumber() == newValue) {
+                        return null;
+                    }
+                }
+
+                assignments.add(newPair);
+            }
+        }
+
+        for(int i = 0; i < col.getChildren().size(); i++) {
+            if(col.getChild(i).getDomain().size() == 1) {
+                int x = col.getChild(i).getRowIndex();
+                int y = col.getChild(i).getColIndex();
+                Point newVar = new Point(x, y);
+                int newValue = col.getChild(i).getDomain().get(0);
+                Pair newPair = new Pair(newVar, newValue);
+                
+                inference(csp, newVar, newValue);
+
+                for(int j = 0; j < col.getChildren().size(); j++) {
+                    if(col.getChild(j).getNumber() == newValue) {
+                        return null;
+                    }
+                }
+
+                assignments.add(newPair);
+            }
+        }
+
+        for(int i = 0; i < blk.getChildren().size(); i++) {
+            if(blk.getChild(i).getDomain().size() == 1 || blk.getChild(i).getDomain().get(0) != ) {
+                int x = blk.getChild(i).getRowIndex();
+                int y = blk.getChild(i).getColIndex();
+                Point newVar = new Point(x, y);
+                int newValue = blk.getChild(i).getDomain().get(0);
+                Pair newPair = new Pair(newVar, newValue);
+                
+                for(int j = 0; j < blk.getChildren().size(); j++) {
+                    if(blk.getChild(j).getNumber() == newValue) {
+                        return null;
+                    }
+                }
+
+                assignments.add(newPair);
+            }
+        }
     }
 
 }

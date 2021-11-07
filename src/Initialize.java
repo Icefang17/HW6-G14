@@ -1,4 +1,10 @@
+import java.util.ArrayList;
+
 import map.State;
+<<<<<<< HEAD
+=======
+import resource.Pair;
+>>>>>>> 52515d11bbef29d48c481a4c2f038700fb03aeae
 import search.BTS;
 
 public class Initialize {
@@ -16,8 +22,12 @@ public class Initialize {
         System.out.println("Set 1 Initial State");
         csp.printBoard();
 
-        BTS.backtrackingSearch(csp);
-        System.out.println("Done maybe?");
+        //BTS.backtrackingSearch(csp);
+        //System.out.println("Done maybe?");
+
+        ArrayList<Pair> assignment = new ArrayList<>(BTS.backtrackingSearch(csp));
+
+        System.out.println(assignment);
     }
 
     public static void fillBoard(int set[][], State state){

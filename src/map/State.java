@@ -98,5 +98,7 @@ public class State {
 
             System.out.println(row);
         }
+
+        System.out.println("\n");
     }
 }

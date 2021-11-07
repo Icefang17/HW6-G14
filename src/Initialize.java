@@ -1,4 +1,7 @@
 import java.util.ArrayList;
+import java.awt.Point;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 
 import map.State;
 import resource.Pair;
@@ -44,13 +47,15 @@ public class Initialize {
         {0, 8, 1}, {2, 8, 6}, {4, 8, 5}, {7, 8, 7}
     };
 
-    public static void main(String[] args){
+    public static void main(String[] args) {
+        NumberFormat format = new DecimalFormat("#0.00");
         ArrayList<Pair> assignment = new ArrayList<>();
         State csp1 = new State();
         State csp2 = new State();
         State csp3 = new State();
 
         // Problem 1.
+        long startTime = System.currentTimeMillis();
         System.out.println("\n\tProblem 1");
         System.out.println("-------------------------");
 
@@ -62,6 +67,9 @@ public class Initialize {
 
         // Solve problem 1.
         assignment = BTS.backtrackingSearch(csp1);
+        printSteps(assignment);
+
+        // Update board.
         fillBoard(assignment, csp1);
         System.out.println("\tSolved State");
         csp1.printBoard();
@@ -69,8 +77,11 @@ public class Initialize {
 
         // End Problem 1.
         System.out.println("-------------------------");
+        long endTime = System.currentTimeMillis();
+        System.out.println("Problem 1 took " + format.format((endTime - startTime) / 1000d) + " seconds.");
 
         // Problem 2.
+        startTime = System.currentTimeMillis();
         System.out.println("\n\tProblem 2");
         System.out.println("-------------------------");
 
@@ -82,6 +93,9 @@ public class Initialize {
 
         // Solve problem 2.
         assignment = BTS.backtrackingSearch(csp2);
+        printSteps(assignment);
+
+        // Update board.
         fillBoard(assignment, csp2);
         System.out.println("\tSolved State");
         csp2.printBoard();
@@ -89,8 +103,11 @@ public class Initialize {
 
         // End Problem 2.
         System.out.println("-------------------------");
+        endTime = System.currentTimeMillis();
+        System.out.println("Problem 2 took " + format.format((endTime - startTime) / 1000d) + " seconds.");
 
         // Problem 3.
+        startTime = System.currentTimeMillis();
         System.out.println("\n\tProblem 3");
         System.out.println("-------------------------");
 
@@ -102,6 +119,9 @@ public class Initialize {
 
         // Solve problem 3.
         assignment = BTS.backtrackingSearch(csp3);
+        printSteps(assignment);
+
+        // Update board.
         fillBoard(assignment, csp3);
         System.out.println("\tSolved State");
         csp3.printBoard();
@@ -109,6 +129,8 @@ public class Initialize {
 
         // End Problem 3.
         System.out.println("-------------------------");
+        endTime = System.currentTimeMillis();
+        System.out.println("Problem 3 took " + format.format((endTime - startTime) / 1000d) + " seconds.");
     }
 
     /**
@@ -130,6 +152,17 @@ public class Initialize {
     public static void fillBoard(ArrayList<Pair> set, State state){
         for(int i = 0; i < set.size(); i++){
             state.getBox(set.get(i).getLocation()).setNumber(set.get(i).getValue());
+        }
+    }
+
+    private static void printSteps(ArrayList<Pair> set) {
+        for(int i = 0; i < 5; i++) {
+            Pair curAssignment = set.get(i);
+            Point var = curAssignment.getLocation();
+            Integer value = curAssignment.getValue();
+            System.out.println("Step: [" + (i + 1) + "]");
+            System.out.println("Location: [" + var.x + ", " + var.y + "]");
+            System.out.println("Value: [" + value.intValue() + "]\n");
         }
     }
 }

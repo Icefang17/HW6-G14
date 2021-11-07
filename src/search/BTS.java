@@ -167,11 +167,11 @@ public class BTS {
     }
 
     /**
-     * Forward check future assignments by propogating constraints recursively.
+     * Forward check future assignments by propagating constraints recursively.
      * @param csp the csp to reference
      * @param var the variable to check from
      * @param value the value of the variable
-     * @param steps the arraylist to add inferences into.
+     * @param steps the arraylist to add inferences into
      * @return an arraylist of inferences
      */
     private static ArrayList<Pair> inference(State csp, Point var, Integer value, ArrayList<Pair> steps) {
@@ -225,7 +225,7 @@ public class BTS {
      * @param box the box to check the groups of
      * @return the box with the smallest domain.
      */
-    private static Box findNearestLowestDomain(State csp, Box box){
+    private static Box findNearestLowestDomain(State csp, Box box) {
         int lowestDomain = 100;
         Box returnBox = box;
 

@@ -19,9 +19,6 @@ public class Initialize {
         System.out.println("Set 1 Initial State");
         csp.printBoard();
 
-        //BTS.backtrackingSearch(csp);
-        //System.out.println("Done maybe?");
-
         ArrayList<Pair> assignment = new ArrayList<>(BTS.backtrackingSearch(csp));
 
         System.out.println(assignment);

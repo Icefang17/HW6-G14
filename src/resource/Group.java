@@ -43,20 +43,20 @@ public class Group {
         return count;
     }
 
-    public ArrayList<Box> restrictDomains(Integer number){
+    public void restrictDomains(Integer number){
         ArrayList<Box> boxes = new ArrayList<>();
         for(int i = 0; i < 9; i++){
             if(!children.get(i).getDomain().isEmpty() && children.get(i).getDomain().contains(number) && children.get(i).getNumber() != number){
                 children.get(i).getDomain().remove(number);
-                boxes.add(children.get(i));
             }
         }
-        return boxes;
     }
 
-    public void unrestrictDomains(Integer number, ArrayList<Box> boxes){
-        for(int i = 0; i < boxes.size(); i++){
-            boxes.get(i).getDomain().add(number);
+    public void unrestrictDomains(Integer number){
+        for(int i = 0; i < 9; i++){
+            if(!children.get(i).isSet() && !children.get(i).getDomain().contains(number)){
+                children.get(i).getDomain().add(number);
+            }
         }
     }
 

@@ -1,10 +1,7 @@
 import java.util.ArrayList;
 
 import map.State;
-<<<<<<< HEAD
-=======
 import resource.Pair;
->>>>>>> 52515d11bbef29d48c481a4c2f038700fb03aeae
 import search.BTS;
 
 public class Initialize {

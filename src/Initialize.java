@@ -11,6 +11,7 @@ public class Initialize {
                                         {8,4,3},{4,5,9},{6,5,5},{8,5,8},{0,6,8},{4,6,4},{5,6,9},
                                         {7,6,5},{0,7,1},{3,7,3},{4,7,2},{2,8,9},{6,8,3}};
 
+
     public static void main(String[] args){
 
         State csp = new State();

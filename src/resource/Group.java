@@ -35,9 +35,9 @@ public class Group {
         }
         int count = 0;
         for(int i = 0; i < MAX; i++){
-            if(children.get(i).getNumber() == 0)
+            if(children.get(i).getNumber() == 0 && !children.get(i).isSet())
                 count++;
-            if(children.get(i).getDomain().isEmpty())
+            if(children.get(i).getDomain().size() == 0 && !children.get(i).isSet())
                 return (-2);
         }
         return count;
@@ -46,7 +46,7 @@ public class Group {
     public ArrayList<Box> restrictDomains(Integer number){
         ArrayList<Box> boxes = new ArrayList<>();
         for(int i = 0; i < 9; i++){
-            if(!children.get(i).getDomain().isEmpty() && children.get(i).getDomain().contains(number)){
+            if(!children.get(i).getDomain().isEmpty() && children.get(i).getDomain().contains(number) && children.get(i).getNumber() != number){
                 children.get(i).getDomain().remove(number);
                 boxes.add(children.get(i));
             }

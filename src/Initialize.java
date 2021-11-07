@@ -1,4 +1,5 @@
 import map.State;
+import search.BTS;
 
 public class Initialize {
 
@@ -9,10 +10,14 @@ public class Initialize {
 
     public static void main(String[] args){
 
-        State state = new State();
-        state.printBoard();
-        fillBoard(set1, state);
-        state.printBoard();
+        State csp = new State();
+        fillBoard(set1, csp);
+        csp.calculateDomains();
+        System.out.println("Set 1 Initial State");
+        csp.printBoard();
+
+        BTS.backtrackingSearch(csp);
+        System.out.println("Done maybe?");
     }
 
     public static void fillBoard(int set[][], State state){

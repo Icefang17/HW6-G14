@@ -20,26 +20,33 @@ public class BTS {
         if(csp.isComplete())
             return assignment;
 
-        Point var = selectUnassignedVariable(csp);
-
+        Point var = selectUnassignedVariable(csp, assignment);
+        System.out.println(var);
         ArrayList<Integer> domain = csp.getBox(var.x, var.y).getDomain();
         for(int i = 0; i < domain.size(); i++) {
-            Pair newAssignment = new Pair(var, i);
+            Pair newAssignment = new Pair(var, csp.getBox(var).getDomain().get(i));
+            csp.getBox(var).toggleSet();
             ArrayList<Pair> inferences = new ArrayList<>();
 
             if(csp.getBox(var).checkValidity()) {
-                assignment.add(new Pair(var, i));
+                assignment.add(newAssignment);
 
-                inferences.addAll(inference(csp, var, i, new ArrayList<Pair>()));
+                //ArrayList<Pair> steps = new ArrayList<>();
+                //inferences.addAll(inference(csp, var, csp.getBox(var).getDomain().get(i), steps));
 
-                if(inferences != null) {
+                /*if(inferences != null) {
                     assignment.addAll(inferences);
                     ArrayList<Pair> result = backtrack(assignment, csp);
                     
                     if(result != null)
                         return result;
-                }
+                }*/
+                ArrayList<Pair> result = backtrack(assignment, csp);
+
+                if(result != null)
+                    return result;
             }
+            csp.getBox(var).toggleSet();
             assignment.remove(newAssignment);
             assignment.removeAll(inferences);
         }
@@ -65,13 +72,15 @@ public class BTS {
 //         }
 // >>>>>>> 74452434e9f88abd2944106acb63298d4125ce36
 
-    private static Point selectUnassignedVariable(State state){
+    private static Point selectUnassignedVariable(State state, ArrayList<Pair> assignment){
         ArrayList<Point> selections = new ArrayList<>();
+        Point location = new Point();
         int minDomainSize = 100;
         for(int i = 0; i < 9; i++){
             for(int j = 0; j < 9; j++){
                 int domainSize = state.getBox(j, i).getDomain().size();
-                if(domainSize <= minDomainSize && domainSize > 0){
+                location.setLocation(j, i);
+                if(domainSize <= minDomainSize && domainSize > 0 && !state.getBox(j, i).isSet() && !parseAssignment(assignment, location)){
                     if(domainSize < minDomainSize){
                         selections.clear();
                         minDomainSize = domainSize;
@@ -85,6 +94,14 @@ public class BTS {
             return selections.get(0);
 
         return tieBreaker(selections, state);
+    }
+
+    private static boolean parseAssignment(ArrayList<Pair> assignment, Point location){
+        for(int i = 0; i < assignment.size(); i++){
+            if(assignment.get(i).getLocation().equals(location))
+                return true;
+        }
+        return false;
     }
 
     private static Point tieBreaker(ArrayList<Point> selections, State state){
@@ -109,13 +126,14 @@ public class BTS {
         //ArrayList<Pair> steps = new ArrayList<>();
         Box box = csp.getBox(var);
         Integer boxValue = value;
+        System.out.println(var);
 
-        box.domainInference(boxValue);
+
         box.getParentRow().restrictDomains(boxValue);
         box.getParentColumn().restrictDomains(boxValue);
         box.getParentBlock().restrictDomains(boxValue);
         if(!box.checkValidity()) {
-            return null;
+
         }
 
         Box newBox = findNearestLowestDomain(csp, box);
@@ -126,9 +144,10 @@ public class BTS {
             box = newBox;
 
         boxValue = box.getDomain().get(0);
-        Point boxVar = new Point(box.getRowIndex(), box.getColIndex());
+        Point boxVar = new Point(box.getColIndex(), box.getRowIndex());
         steps.add(new Pair(boxVar, boxValue));
-
+        box.toggleSet();
+        box.domainInference(boxValue);
         return inference(csp, boxVar, boxValue, steps);
     }
 
@@ -139,15 +158,15 @@ public class BTS {
             Box curRowChild = box.getParentRow().getChild(i);
             Box curColChild = box.getParentColumn().getChild(i);
             Box curBlkChild = box.getParentBlock().getChild(i);
-            if(curRowChild.getDomain().size() < lowestDomain && curRowChild.getNumber() == 0){
+            if(curRowChild.getDomain().size() < lowestDomain && curRowChild.getNumber() == 0 && !curRowChild.isSet()){
                 lowestDomain = curRowChild.getDomain().size();
                 returnBox = curRowChild;
             }
-            if(curColChild.getDomain().size() < lowestDomain && curColChild.getNumber() == 0){
+            if(curColChild.getDomain().size() < lowestDomain && curColChild.getNumber() == 0 && !curColChild.isSet()){
                 lowestDomain = curColChild.getDomain().size();
                 returnBox = curColChild;
             }
-            if(curBlkChild.getDomain().size() < lowestDomain && curBlkChild.getNumber() == 0){
+            if(curBlkChild.getDomain().size() < lowestDomain && curBlkChild.getNumber() == 0 && !curBlkChild.isSet()){
                 lowestDomain = curBlkChild.getDomain().size();
                 returnBox = curBlkChild;
             }

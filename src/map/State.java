@@ -70,6 +70,18 @@ public class State {
         return true;
     }
 
+    public void calculateDomains(){
+        for(int y = 0; y < 9; y++){
+            for(int x = 0; x < 9; x++){
+                Box curBox = rows.get(y).getChild(x);
+                if(curBox.isSet()){
+                    curBox.domainInference(curBox.getNumber());
+                    curBox.restrictNeighboringDomains(curBox.getNumber());
+                }
+            }
+        }
+    }
+
     public void printBoard(){
         for(int i = 0; i < 9; i++){
             String row = new String();

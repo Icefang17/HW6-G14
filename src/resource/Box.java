@@ -7,6 +7,7 @@ public class Box {
     private int rowIndex;
     private int colIndex;
     private int blkIndex;
+    private boolean isSet;
     private Row parentRow;
     private Column parentColumn;
     private Block parentBlock;
@@ -23,6 +24,7 @@ public class Box {
         this.rowIndex = rowIndex;
         this.colIndex = colIndex;
         this.blkIndex = blkIndex;
+        this.isSet = false;
         this.parentRow = (Row)parents.get(0);
         this.parentColumn = (Column)parents.get(1);
         this.parentBlock = (Block)parents.get(2);
@@ -68,6 +70,13 @@ public class Box {
             return false;
         return true;
     }
+
+    public boolean isSet(){
+        if(number > 0 || isSet)
+            return true;
+        return false;
+    }
+
     public void setNumber(int number){this.number = number;}
 
     public int getNumber(){return number;}
@@ -77,6 +86,15 @@ public class Box {
     public int getColIndex(){return colIndex;}
 
     public int getBlkIndex(){return blkIndex;}
+
+    public boolean getIsSet(){return isSet;}
+
+    public void toggleSet(){
+        if(isSet)
+            isSet = false;
+        else
+            isSet = true;
+    }
 
     public Row getParentRow(){return parentRow;}
 

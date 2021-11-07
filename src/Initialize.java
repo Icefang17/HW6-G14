@@ -20,10 +20,11 @@ public class Initialize {
         State csp = new State();
         fillBoard(set1, csp);
         csp.calculateDomains();
-        System.out.println("Set 1 Initial State");
+        System.out.println("Initial State");
         csp.printBoard();
 
         ArrayList<Pair> assignment = new ArrayList<>(BTS.backtrackingSearch(csp));
+        fillBoard(assignment, csp);
 
         csp.printBoard();
     }
@@ -31,6 +32,12 @@ public class Initialize {
     public static void fillBoard(int set[][], State state){
         for(int i = 0; i < set.length; i++){
             state.getBox(set[i][0], set[i][1]).setNumber(set[i][2]);
+        }
+    }
+
+    public static void fillBoard(ArrayList<Pair> set, State state){
+        for(int i = 0; i < set.size(); i++){
+            state.getBox(set.get(i).getLocation()).setNumber(set.get(i).getValue());
         }
     }
 }

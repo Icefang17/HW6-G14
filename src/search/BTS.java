@@ -39,8 +39,8 @@ public class BTS {
                         return result;
                 }
             }
-            csp.getBox(var).set(false);
-            assignment.remove(newAssignment);
+            for(int j = 0; j < inferences.size(); j++)
+                csp.getBox(inferences.get(i).getLocation()).set(false);
             assignment.remove(inferences);
         }
 
@@ -133,7 +133,7 @@ public class BTS {
             box.getParentBlock().unrestrictDomains(boxValue);
             return steps;
         }
-        box.setNumber(boxValue);
+        //box.setNumber(boxValue);
         box.domainInference(boxValue);
         steps.add(new Pair(new Point(boxVar), boxValue));
         Box newBox = findNearestLowestDomain(csp, box);
@@ -171,8 +171,7 @@ public class BTS {
             }
         }
         if(lowestDomain > 9) {
-            System.out.println("ERROR: Something went wrong in findNearestLowestDomain()");
-
+            System.out.println("ERROR: Couldn't find any valid inferences");
         }
         if(lowestDomain == 1){
             return returnBox;

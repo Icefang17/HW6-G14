@@ -70,15 +70,25 @@ public class State {
         return true;
     }
 
+
     public void calculateDomains(){
         for(int y = 0; y < 9; y++){
             for(int x = 0; x < 9; x++){
                 Box curBox = rows.get(y).getChild(x);
                 if(curBox.isSet()){
-                    curBox.domainInference(curBox.getNumber());
+                    curBox.getDomain().clear();
+                    curBox.getDomain().add(curBox.getNumber());
                     curBox.set(true);
-                    curBox.restrictNeighboringDomains(curBox.getNumber());
                 }
+                curBox.updateDomain();
+            }
+        }
+    }
+
+    private void resetDomains(){
+        for(int y = 0; y < 9; y++){
+            for(int x = 0; x < 9; x++){
+                rows.get(y).getChild(x).initializeDomain();
             }
         }
     }

@@ -13,6 +13,7 @@ public class BTS {
     }
 
     private static ArrayList<Pair> backtrack(ArrayList<Pair> assignment, State csp){
+
         if(csp.isComplete())
             return assignment;
 
@@ -20,8 +21,8 @@ public class BTS {
         //System.out.println(var);
         ArrayList<Integer> domain = csp.getBox(var.x, var.y).getDomain();
         for(int i = 0; i < domain.size(); i++) {
+
             Pair newAssignment = new Pair(var, csp.getBox(var).getDomain().get(i));
-            //csp.getBox(var).set(true);
             ArrayList<Pair> inferences = new ArrayList<>();
 
             if(csp.getBox(var).checkValidity()) {
@@ -30,18 +31,21 @@ public class BTS {
                 ArrayList<Pair> steps = new ArrayList<>();
                 inferences = inference(csp, var, csp.getBox(var).getDomain().get(i), steps);
 
-                if(inferences != null) {
+                if(!inferences.isEmpty()) {
                     assignment.addAll(inferences);
-                    System.out.println("Number of verified moves: " + assignment.size());
+                    //System.out.println("Number of moves: " + assignment.size());
                     ArrayList<Pair> result = backtrack(assignment, csp);
                     
                     if(result != null)
                         return result;
                 }
             }
-            for(int j = 0; j < inferences.size(); j++)
-                csp.getBox(inferences.get(i).getLocation()).set(false);
-            assignment.remove(inferences);
+            for(int j = 0; j < inferences.size(); j++) {
+                csp.getBox(inferences.get(j).getLocation()).set(false);
+                csp.getBox(inferences.get(j).getLocation()).setNumber(0);
+            }
+            assignment.removeAll(inferences);
+            csp.calculateDomains();
         }
 
         return null;
@@ -120,7 +124,7 @@ public class BTS {
         Box box = csp.getBox(var);
         Point boxVar = new Point(box.getColIndex(), box.getRowIndex());
         Integer boxValue = value;
-        System.out.println("Testing " + boxValue.intValue() + " at [" + boxVar.x + ", " + boxVar.y + "]");
+        //System.out.println("Testing " + boxValue.intValue() + " at [" + boxVar.x + ", " + boxVar.y + "]");
 
         box.set(true);
         box.getParentRow().restrictDomains(boxValue);
@@ -133,11 +137,11 @@ public class BTS {
             box.getParentBlock().unrestrictDomains(boxValue);
             return steps;
         }
-        //box.setNumber(boxValue);
+        box.setNumber(boxValue);
         box.domainInference(boxValue);
         steps.add(new Pair(new Point(boxVar), boxValue));
         Box newBox = findNearestLowestDomain(csp, box);
-        System.out.println(steps.size() + 1);
+        //System.out.println(steps.size() + 1);
         //csp.printBoard();
         if(newBox == null){
             return steps;

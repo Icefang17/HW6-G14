@@ -56,6 +56,7 @@ public class Group {
         for(int i = 0; i < 9; i++){
             if(!children.get(i).isSet() && !children.get(i).getDomain().contains(number)){
                 children.get(i).getDomain().add(number);
+                children.get(i).sortDomain();
             }
         }
     }

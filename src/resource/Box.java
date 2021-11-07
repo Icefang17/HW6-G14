@@ -55,8 +55,47 @@ public class Box {
     }
 
     public void domainInference(Integer value){
+        if(!domain.contains(value))
+            domain.add(value);
+        sortDomain();
+    }
+
+    public void sortDomain(){
+        for(int i = 0; i < domain.size(); i++){
+            for(int j = i + 1; j < domain.size(); j++){
+                Integer tmp = 0;
+                if(domain.get(i) > domain.get(j)){
+                    tmp = domain.get(i);
+                    domain.set(i, domain.get(j));
+                    domain.set(j, tmp);
+                }
+            }
+        }
+    }
+
+    public void updateDomain(){
         domain.clear();
-        domain.add(value);
+        if(isSet()){
+            domain.add(number);
+            set(true);
+        }
+        else{
+            initializeDomain();
+            checkDomain(parentRow);
+            checkDomain(parentColumn);
+            checkDomain(parentBlock);
+        }
+        sortDomain();
+    }
+
+    private void checkDomain(Group parent){
+        for(int i = 0; i < 9; i++){
+            Integer number = parent.getChild(i).getNumber();
+            if(number > 0){
+                domain.remove(number);
+            }
+        }
+        sortDomain();
     }
 
     public void restrictNeighboringDomains(Integer value){

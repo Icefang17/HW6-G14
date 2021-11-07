@@ -14,19 +14,43 @@ public class Initialize {
                                         {6,2,2},{8,2,6},{0,3,2},{4,3,3},{1,4,4},{6,4,7},{0,5,5},
                                         {5,5,7},{8,5,1},{3,6,6},{5,6,3},{1,7,6},{3,7,1},{4,8,7},
                                         {7,8,5}};
+    public static final int set3[][] = {{0,0,6},{1,0,7},{1,1,2},{2,1,5},{1,2,9},{3,2,5},{4,2,6},
+                                        {6,2,2},{0,3,3},{4,3,8},{6,3,9},{6,4,8},{8,4,1},{3,5,4},
+                                        {4,5,7},{2,6,8},{3,6,6},{7,6,9},{7,7,1},{0,8,1},{2,8,6},
+                                        {4,8,5},{7,8,7}};
 
     public static void main(String[] args){
+        ArrayList<Pair> assignment = new ArrayList<>();
+        State csp1 = new State();
+        State csp2 = new State();
+        State csp3 = new State();
 
-        State csp = new State();
-        fillBoard(set1, csp);
-        csp.calculateDomains();
+        fillBoard(set1, csp1);
+        csp1.calculateDomains();
         System.out.println("Initial State");
-        csp.printBoard();
+        csp1.printBoard();
+        assignment = BTS.backtrackingSearch(csp1);
+        fillBoard(assignment, csp1);
+        csp1.printBoard();
+        assignment.clear();
 
-        ArrayList<Pair> assignment = new ArrayList<>(BTS.backtrackingSearch(csp));
-        fillBoard(assignment, csp);
+        fillBoard(set2, csp2);
+        csp2.calculateDomains();
+        System.out.println("Initial State");
+        csp2.printBoard();
+        assignment = BTS.backtrackingSearch(csp2);
+        fillBoard(assignment, csp2);
+        csp2.printBoard();
+        assignment.clear();
 
-        csp.printBoard();
+        fillBoard(set3, csp3);
+        csp3.calculateDomains();
+        System.out.println("Initial State");
+        csp3.printBoard();
+        assignment = BTS.backtrackingSearch(csp3);
+        fillBoard(assignment, csp3);
+        csp3.printBoard();
+        assignment.clear();
     }
 
     public static void fillBoard(int set[][], State state){

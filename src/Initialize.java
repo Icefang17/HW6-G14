@@ -21,7 +21,7 @@ public class Initialize {
 
         ArrayList<Pair> assignment = new ArrayList<>(BTS.backtrackingSearch(csp));
 
-        System.out.println(assignment);
+        csp.printBoard();
     }
 
     public static void fillBoard(int set[][], State state){

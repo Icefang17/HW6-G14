@@ -89,12 +89,7 @@ public class Box {
 
     public boolean getIsSet(){return isSet;}
 
-    public void toggleSet(){
-        if(isSet)
-            isSet = false;
-        else
-            isSet = true;
-    }
+    public void set(boolean set){this.isSet = set;}
 
     public Row getParentRow(){return parentRow;}
 

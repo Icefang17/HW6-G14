@@ -76,6 +76,7 @@ public class State {
                 Box curBox = rows.get(y).getChild(x);
                 if(curBox.isSet()){
                     curBox.domainInference(curBox.getNumber());
+                    curBox.set(true);
                     curBox.restrictNeighboringDomains(curBox.getNumber());
                 }
             }

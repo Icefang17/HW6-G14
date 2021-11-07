@@ -21,30 +21,27 @@ public class BTS {
         ArrayList<Integer> domain = csp.getBox(var.x, var.y).getDomain();
         for(int i = 0; i < domain.size(); i++) {
             Pair newAssignment = new Pair(var, csp.getBox(var).getDomain().get(i));
-            csp.getBox(var).toggleSet();
+            //csp.getBox(var).set(true);
             ArrayList<Pair> inferences = new ArrayList<>();
 
             if(csp.getBox(var).checkValidity()) {
-                assignment.add(newAssignment);
+                //assignment.add(newAssignment);
 
                 ArrayList<Pair> steps = new ArrayList<>();
-                inferences.addAll(inference(csp, var, csp.getBox(var).getDomain().get(i), steps));
+                inferences = inference(csp, var, csp.getBox(var).getDomain().get(i), steps);
 
                 if(inferences != null) {
                     assignment.addAll(inferences);
+                    System.out.println("Number of verified moves: " + assignment.size());
                     ArrayList<Pair> result = backtrack(assignment, csp);
                     
                     if(result != null)
                         return result;
                 }
-                ArrayList<Pair> result = backtrack(assignment, csp);
-
-                if(result != null)
-                    return result;
             }
-            csp.getBox(var).toggleSet();
+            csp.getBox(var).set(false);
             assignment.remove(newAssignment);
-            assignment.removeAll(inferences);
+            assignment.remove(inferences);
         }
 
         return null;
@@ -110,7 +107,7 @@ public class BTS {
             int openBoxes = 0;
             box = state.getBox(point.x, point.y);
             openBoxes += box.getParentRow().isComplete() + box.getParentColumn().isComplete() + box.getParentBlock().isComplete();
-            if(openBoxes < maxOpenBoxes) {
+            if(openBoxes > maxOpenBoxes) {
                 maxOpenBoxes = openBoxes;
                 choice.setLocation(point);
             }
@@ -121,37 +118,34 @@ public class BTS {
     private static ArrayList<Pair> inference(State csp, Point var, Integer value, ArrayList<Pair> steps) {
         //ArrayList<Pair> steps = new ArrayList<>();
         Box box = csp.getBox(var);
+        Point boxVar = new Point(box.getColIndex(), box.getRowIndex());
         Integer boxValue = value;
-        System.out.println(var);
+        System.out.println("Testing " + boxValue.intValue() + " at [" + boxVar.x + ", " + boxVar.y + "]");
 
-
+        box.set(true);
         box.getParentRow().restrictDomains(boxValue);
         box.getParentColumn().restrictDomains(boxValue);
         box.getParentBlock().restrictDomains(boxValue);
         if(!box.checkValidity()) {
+            box.set(false);
             box.getParentRow().unrestrictDomains(boxValue);
             box.getParentColumn().unrestrictDomains(boxValue);
             box.getParentBlock().unrestrictDomains(boxValue);
-            if(box.getDomain().size() > 1) {
-                boxValue = box.getDomain().get(box.getDomain().indexOf(boxValue) + 1);
-                box.getDomain().remove(box.getDomain().indexOf(boxValue) - 1);
-                return inference(csp, var, boxValue, steps);
-            }
-            else
-                return null;
+            return steps;
         }
-        box.toggleSet();
+        box.setNumber(boxValue);
         box.domainInference(boxValue);
+        steps.add(new Pair(new Point(boxVar), boxValue));
         Box newBox = findNearestLowestDomain(csp, box);
-        if(newBox == box){
+        System.out.println(steps.size() + 1);
+        //csp.printBoard();
+        if(newBox == null){
             return steps;
         }
         else
             box = newBox;
-
+        boxVar.setLocation(box.getColIndex(), box.getRowIndex());
         boxValue = box.getDomain().get(0);
-        Point boxVar = new Point(box.getColIndex(), box.getRowIndex());
-        steps.add(new Pair(boxVar, boxValue));
 
         return inference(csp, boxVar, boxValue, steps);
     }
@@ -180,7 +174,10 @@ public class BTS {
             System.out.println("ERROR: Something went wrong in findNearestLowestDomain()");
 
         }
-        return returnBox;
+        if(lowestDomain == 1){
+            return returnBox;
+        }
+        return null;
     }
 
     /*private ArrayList<Pair> inference(State csp, Point var, int value) {
